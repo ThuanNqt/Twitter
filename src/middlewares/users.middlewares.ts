@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import userService from '~/services/users.services'
 import { ErrorWithStatus } from '~/models/Errors'
+import { USER_MESSAGES } from '~/constants/messages'
 
 export const loginValidator = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body
@@ -15,46 +16,47 @@ export const loginValidator = (req: Request, res: Response, next: NextFunction) 
 export const registerValidator = validate(
   checkSchema({
     name: {
-      notEmpty: true,
-      isString: true,
+      notEmpty: {
+        errorMessage: USER_MESSAGES.NAME_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: USER_MESSAGES.NAME_MUST_BE_A_STRING
+      },
       isLength: {
         options: {
           min: 1,
-          max: 255
-        }
+          max: 100
+        },
+        errorMessage: USER_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
       },
       trim: true
     },
     email: {
-      notEmpty: true,
-      isEmail: true,
+      notEmpty: {
+        errorMessage: USER_MESSAGES.EMAIL_IS_REQUIRED
+      },
+      isEmail: { errorMessage: USER_MESSAGES.EMAIL_IS_INVALID },
       trim: true,
       custom: {
         options: async (value) => {
           const result = await userService.checkEmailExist(value)
           if (result) {
-            throw new ErrorWithStatus({ message: 'Email already exists!', status: 401 })
+            throw new ErrorWithStatus({ message: USER_MESSAGES.EMAIL_ALREADY_EXIST, status: 401 })
           }
           return true
         }
       }
     },
     password: {
-      notEmpty: true,
+      notEmpty: {
+        errorMessage: USER_MESSAGES.PASSWORD_IS_REQUIRED
+      },
       isLength: {
         options: {
-          min: 5,
+          min: 6,
           max: 50
-        }
-      }
-    },
-    confirm_password: {
-      notEmpty: true,
-      isLength: {
-        options: {
-          min: 5,
-          max: 50
-        }
+        },
+        errorMessage: USER_MESSAGES.PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
       },
       isStrongPassword: {
         options: {
@@ -64,12 +66,34 @@ export const registerValidator = validate(
           minUppercase: 1,
           minSymbols: 1
         },
-        errorMessage: 'Password must be at lest 5 characters !'
+        errorMessage: USER_MESSAGES.PASSWORD_MUST_BE_STRONG
+      }
+    },
+    confirm_password: {
+      notEmpty: {
+        errorMessage: USER_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
+      },
+      isLength: {
+        options: {
+          min: 6,
+          max: 50
+        },
+        errorMessage: USER_MESSAGES.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
+      },
+      isStrongPassword: {
+        options: {
+          minLength: 5,
+          minLowercase: 1,
+          minNumbers: 1,
+          minUppercase: 1,
+          minSymbols: 1
+        },
+        errorMessage: USER_MESSAGES.CONFIRM_PASSWORD_MUST_BE_STRONG
       },
       custom: {
         options: (value, { req }) => {
           if (value !== req.body.password) {
-            throw new Error('Password confirmation does not match password!')
+            throw new Error(USER_MESSAGES.CONFIRM_PASSWORD_NOT_MATCH_PASSWORD)
           }
           return true
         }
