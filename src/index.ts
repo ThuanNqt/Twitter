@@ -3,6 +3,7 @@ dotenv.config()
 import express, { Request, Response, NextFunction } from 'express'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
+import { defaultErrorHandler } from './middlewares/error.middlewares'
 const app = express()
 const port = process.env.PORT || 8000
 
@@ -14,11 +15,8 @@ databaseService.connect()
 
 app.use('/users', usersRouter)
 
-// Error handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log('Error: ', err.message)
-  res.status(400).json({ error: err.message })
-})
+// Default error handler
+app.use(defaultErrorHandler)
 
 app.listen(port, () => {
   console.log('Server is running on port ', port)
