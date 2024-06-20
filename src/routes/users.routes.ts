@@ -4,7 +4,7 @@ import { loginController, registerController } from '~/controllers/users.control
 const usersRouter = Router()
 import { loginValidator, registerValidator } from '~/middlewares/users.middlewares'
 
-usersRouter.post('/login', loginValidator, loginController)
+usersRouter.post('/login', loginValidator, wrapAsync(loginController))
 usersRouter.post('/register', registerValidator, wrapAsync(registerController))
 
 export default usersRouter

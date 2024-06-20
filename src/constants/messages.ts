@@ -3,6 +3,7 @@ export const USER_MESSAGES = {
   NAME_IS_REQUIRED: 'Name is required',
   NAME_MUST_BE_A_STRING: 'Name must be a string',
   NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 1 to 100',
+  USER_NOT_FOUND: 'User not found',
   EMAIL_ALREADY_EXIST: 'Email already exist',
   EMAIL_IS_REQUIRED: 'Email is required',
   EMAIL_IS_INVALID: 'Email is invalid',
@@ -14,5 +15,7 @@ export const USER_MESSAGES = {
   CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm password must be a string',
   CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50: 'Confirm password length must be from 6 to 50',
   CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm password must be strong',
-  CONFIRM_PASSWORD_NOT_MATCH_PASSWORD: 'Confirm password not match password'
+  CONFIRM_PASSWORD_NOT_MATCH_PASSWORD: 'Confirm password not match password',
+  LOGIN_SUCCESS: 'Login success!',
+  REGISTER_SUCCESS: 'Register success!'
 } as const
