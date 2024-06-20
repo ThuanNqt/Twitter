@@ -17,5 +17,6 @@ export const USER_MESSAGES = {
   CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm password must be strong',
   CONFIRM_PASSWORD_NOT_MATCH_PASSWORD: 'Confirm password not match password',
   LOGIN_SUCCESS: 'Login success!',
-  REGISTER_SUCCESS: 'Register success!'
+  REGISTER_SUCCESS: 'Register success!',
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required'
 } as const
