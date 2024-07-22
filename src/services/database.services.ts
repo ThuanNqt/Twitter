@@ -10,6 +10,8 @@ class DatabaseService {
     this.client = new MongoClient(uri)
     this.db = this.client.db(process.env.DB_NAME)
   }
+
+  // Connection
   async connect() {
     try {
       await this.db.command({ ping: 1 })
@@ -20,10 +22,12 @@ class DatabaseService {
     }
   }
 
+  // get collection users
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USERS_COLLECTION as string)
   }
 
+  // get collection refresh_token
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(process.env.DB_REFRESH_TOKENS_COLLECTION as string)
   }

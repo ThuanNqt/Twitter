@@ -22,10 +22,12 @@ export const loginValidator = validate(
         trim: true,
         custom: {
           options: async (value, { req }) => {
+            // check email, password exist DB: users
             const user = await databaseService.users.findOne({
               email: value,
               password: hashPassword(req.body.password)
             })
+
             if (!user) {
               throw new ErrorWithStatus({ message: USER_MESSAGES.USER_NOT_FOUND, status: 401 })
             }
@@ -88,6 +90,8 @@ export const registerValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
+            // check email exist DB: users
+            // if(exist email) => return false
             const result = await userService.checkEmailExist(value)
             if (result) {
               throw new ErrorWithStatus({ message: USER_MESSAGES.EMAIL_ALREADY_EXIST, status: 401 })
@@ -141,6 +145,7 @@ export const registerValidator = validate(
         },
         custom: {
           options: (value, { req }) => {
+            // check if(confirm password !== password) => return false
             if (value !== req.body.password) {
               throw new Error(USER_MESSAGES.CONFIRM_PASSWORD_NOT_MATCH_PASSWORD)
             }
@@ -170,7 +175,9 @@ export const accessTokenValidator = validate(
         },
         custom: {
           options: async (value: string, { req }) => {
+            // Header: Bearer access_token => access_token
             const access_token = value.split(' ')[1]
+
             if (access_token === '') {
               throw new ErrorWithStatus({
                 message: USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,

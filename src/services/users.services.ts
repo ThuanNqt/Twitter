@@ -9,6 +9,7 @@ import { ObjectId } from 'mongodb'
 import { USER_MESSAGES } from '~/constants/messages'
 
 class UsersService {
+  // sign access token
   private signAccessToken(user_id: string) {
     return signToken({
       payload: {
@@ -21,6 +22,7 @@ class UsersService {
     })
   }
 
+  // sign refresh token
   private signRefreshToken(user_id: string) {
     return signToken({
       payload: {
@@ -33,6 +35,8 @@ class UsersService {
     })
   }
 
+  // Optimize application performance
+  // Promise.all( sign access and refresh token)
   private signAccessAndRefreshToken(user_id: string) {
     return Promise.all([this.signAccessToken(user_id), this.signRefreshToken(user_id)])
   }
