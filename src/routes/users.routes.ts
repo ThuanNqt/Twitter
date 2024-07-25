@@ -2,6 +2,7 @@ import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
   emailVerifyController,
+  forgotPasswordController,
   loginController,
   logoutController,
   registerController,
@@ -11,6 +12,7 @@ const usersRouter = Router()
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator
@@ -57,5 +59,13 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVeri
  * Body: {}
  */
 usersRouter.post('/resend-verify-email', accessTokenValidator, wrapAsync(resendEmailVerifyController))
+
+/**
+ * Description: Forgot password
+ * Path: /forgot-password
+ * Method: Post
+ * Body: {email: string}
+ */
+usersRouter.post('/forgot-password', forgotPasswordValidator, wrapAsync(forgotPasswordController))
 
 export default usersRouter
