@@ -1,9 +1,15 @@
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
-import { loginController, logoutController, registerController } from '~/controllers/users.controllers'
+import {
+  emailVerifyController,
+  loginController,
+  logoutController,
+  registerController
+} from '~/controllers/users.controllers'
 const usersRouter = Router()
 import {
   accessTokenValidator,
+  emailVerifyTokenValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator
@@ -40,6 +46,6 @@ usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapAsy
  * Method: Post
  * Body: {email_verify_token: string}
  */
-usersRouter.post('/verify-email')
+usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVerifyController))
 
 export default usersRouter

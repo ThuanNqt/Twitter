@@ -170,13 +170,11 @@ export const accessTokenValidator = validate(
   checkSchema(
     {
       Authorization: {
-        notEmpty: {
-          errorMessage: USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED
-        },
+        trim: true,
         custom: {
           options: async (value: string, { req }) => {
             // Header: Bearer access_token => access_token
-            const access_token = value.split(' ')[1]
+            const access_token = (value || '').split(' ')[1]
 
             if (access_token === '') {
               throw new ErrorWithStatus({
@@ -210,12 +208,18 @@ export const refreshTokenValidator = validate(
   checkSchema(
     {
       refresh_token: {
-        notEmpty: {
-          errorMessage: USER_MESSAGES.REFRESH_TOKEN_IS_REQUIRED
-        },
+        trim: true,
         custom: {
           options: async (value: string, { req }) => {
             try {
+              // check if the user forgot to enter refresh_token
+              if (!value) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+
               const [decoded_refresh_token, refreshToken] = await Promise.all([
                 verifyToken({ token: value, secretOrPublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string }),
                 databaseService.refreshTokens.findOne({ token: value })
@@ -246,4 +250,38 @@ export const refreshTokenValidator = validate(
     },
     ['body']
   )
+)
+
+export const emailVerifyTokenValidator = validate(
+  checkSchema({
+    email_verify_token: {
+      trim: true,
+      custom: {
+        options: async (value: string, { req }) => {
+          // check if the user forgot to enter Email verify token
+          if (!value) {
+            throw new ErrorWithStatus({
+              message: USER_MESSAGES.EMAIL_VERIFY_TOKEN_IS_REQUIRED,
+              status: HTTP_STATUS.UNAUTHORIZED
+            })
+          }
+
+          try {
+            const decoded_email_verify_token = await verifyToken({
+              token: value,
+              secretOrPublicKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string
+            })
+
+            ;(req as Request).decoded_email_verify_token = decoded_email_verify_token
+          } catch (error) {
+            throw new ErrorWithStatus({
+              message: (error as JsonWebTokenError).message,
+              status: HTTP_STATUS.UNAUTHORIZED
+            })
+          }
+          return true
+        }
+      }
+    }
+  })
 )
