@@ -4,7 +4,8 @@ import {
   emailVerifyController,
   loginController,
   logoutController,
-  registerController
+  registerController,
+  resendEmailVerifyController
 } from '~/controllers/users.controllers'
 const usersRouter = Router()
 import {
@@ -47,5 +48,14 @@ usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapAsy
  * Body: {email_verify_token: string}
  */
 usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVerifyController))
+
+/**
+ * Description: Resend verify email
+ * Path: /resend-verify-email
+ * Method: Post
+ * Header: {Authorization: Bearer <access-token>}
+ * Body: {}
+ */
+usersRouter.post('/resend-verify-email', accessTokenValidator, wrapAsync(resendEmailVerifyController))
 
 export default usersRouter
