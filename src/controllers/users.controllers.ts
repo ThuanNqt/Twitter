@@ -111,3 +111,12 @@ export const resetPasswordController = async (req: Request, res: Response) => {
   const result = await userService.resetPassword(user_id, password)
   return res.json(result)
 }
+
+export const getProfileController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await userService.getProfile(user_id)
+  return res.json({
+    message: USER_MESSAGES.GET_MY_PROFILE_SUCCESS,
+    result
+  })
+}
