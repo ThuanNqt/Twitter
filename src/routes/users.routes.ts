@@ -6,7 +6,9 @@ import {
   loginController,
   logoutController,
   registerController,
-  resendEmailVerifyController
+  resendEmailVerifyController,
+  resetPasswordController,
+  verifyForgotPasswordController
 } from '~/controllers/users.controllers'
 const usersRouter = Router()
 import {
@@ -15,7 +17,9 @@ import {
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  resetPasswordValidator,
+  verifyForgotPasswordTokenValidator
 } from '~/middlewares/users.middlewares'
 
 /**
@@ -67,5 +71,26 @@ usersRouter.post('/resend-verify-email', accessTokenValidator, wrapAsync(resendE
  * Body: {email: string}
  */
 usersRouter.post('/forgot-password', forgotPasswordValidator, wrapAsync(forgotPasswordController))
+
+/**
+ * Description: Verify forgot password token
+ * Path: /verify-forgot-password
+ * Method: Post
+ * Body: {forgot_password_token: string}
+ */
+usersRouter.post(
+  '/verify-forgot-password',
+  verifyForgotPasswordTokenValidator,
+  wrapAsync(verifyForgotPasswordController)
+)
+
+/**
+ * Description: Reset password
+ * Path: /reset-password
+ * Method: Post
+ * Body: {forgot_password_token: string, password: string, confirm_password: string}
+ */
+
+usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPasswordController))
 
 export default usersRouter
