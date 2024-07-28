@@ -17,3 +17,12 @@ export interface TokenPayload extends JwtPayload {
 export interface LogoutReqBody {
   refresh_token: string
 }
+
+export interface UpdateProfileReqBody {
+  name?: string
+  date_of_birth?: string
+  bio?: string
+  location?: string
+  avatar?: string
+  cover_photo?: string
+}

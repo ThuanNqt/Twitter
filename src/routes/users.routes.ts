@@ -1,4 +1,4 @@
-import { verifiedUserValidator } from './../middlewares/users.middlewares'
+import { updateProfileValidator, verifiedUserValidator } from './../middlewares/users.middlewares'
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
@@ -113,6 +113,12 @@ usersRouter.get('/me', accessTokenValidator, wrapAsync(getProfileController))
  * Body: UserSchema
  */
 
-usersRouter.patch('/me', accessTokenValidator, verifiedUserValidator, wrapAsync(updateProfileController))
+usersRouter.patch(
+  '/me',
+  accessTokenValidator,
+  verifiedUserValidator,
+  updateProfileValidator,
+  wrapAsync(updateProfileController)
+)
 
 export default usersRouter

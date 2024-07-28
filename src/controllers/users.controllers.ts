@@ -122,7 +122,12 @@ export const getProfileController = async (req: Request, res: Response) => {
 }
 
 export const updateProfileController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+
+  const user = await userService.updateProfile(user_id, req.body)
+
   return res.json({
-    message: USER_MESSAGES.UPDATE_PROFILE_SUCCESS
+    message: USER_MESSAGES.UPDATE_PROFILE_SUCCESS,
+    result: user
   })
 }
