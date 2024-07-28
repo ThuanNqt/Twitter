@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { pick } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { UserVerifyStatus } from '~/constants/enums'
 import { HTTP_STATUS } from '~/constants/httpStatus'
@@ -123,7 +124,6 @@ export const getProfileController = async (req: Request, res: Response) => {
 
 export const updateProfileController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
-
   const user = await userService.updateProfile(user_id, req.body)
 
   return res.json({
