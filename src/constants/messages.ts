@@ -4,6 +4,7 @@ export const USER_MESSAGES = {
   NAME_MUST_BE_A_STRING: 'Name must be a string',
   NAME_LENGTH_MUST_BE_FROM_1_TO_100: 'Name length must be from 1 to 100',
   USER_NOT_FOUND: 'User not found',
+  USER_NOT_VERIFIED: 'User not verified',
   EMAIL_ALREADY_EXIST: 'Email already exist',
   EMAIL_IS_REQUIRED: 'Email is required',
   EMAIL_IS_INVALID: 'Email is invalid',
@@ -34,5 +35,6 @@ export const USER_MESSAGES = {
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password success',
   FORGOT_PASSWORD_TOKEN_INVALID: 'Forgot password token invalid',
   RESET_PASSWORD_SUCCESS: 'Reset password success',
-  GET_MY_PROFILE_SUCCESS: 'Get my profile success'
+  GET_MY_PROFILE_SUCCESS: 'Get my profile success',
+  UPDATE_PROFILE_SUCCESS: 'Update profile success'
 } as const

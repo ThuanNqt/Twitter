@@ -12,7 +12,7 @@ export const loginController = async (req: Request, res: Response, next: NextFun
   try {
     const user = req.user as User
     const user_id = user._id as ObjectId
-    const result = await userService.login(user_id.toString())
+    const result = await userService.login({ user_id: user_id.toString(), verify: user.verify })
     if (result) {
       res.status(200).json({
         message: USER_MESSAGES.LOGIN_SUCCESS,
@@ -94,8 +94,8 @@ export const resendEmailVerifyController = async (req: Request, res: Response) =
 }
 
 export const forgotPasswordController = async (req: Request, res: Response) => {
-  const { _id } = req.user as User
-  const result = await userService.forgotPassword(_id.toString())
+  const { _id, verify } = req.user as User
+  const result = await userService.forgotPassword({ user_id: _id.toString(), verify: verify })
   return res.json(result)
 }
 
@@ -118,5 +118,11 @@ export const getProfileController = async (req: Request, res: Response) => {
   return res.json({
     message: USER_MESSAGES.GET_MY_PROFILE_SUCCESS,
     result
+  })
+}
+
+export const updateProfileController = async (req: Request, res: Response) => {
+  return res.json({
+    message: USER_MESSAGES.UPDATE_PROFILE_SUCCESS
   })
 }

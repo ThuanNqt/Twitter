@@ -11,6 +11,8 @@ import { verifyToken } from '~/utils/jwt'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
+import { TokenPayload } from '~/models/requests/User.requests'
+import { UserVerifyStatus } from '~/constants/enums'
 
 // global schema
 const passwordSchema: ParamSchema = {
@@ -387,3 +389,19 @@ export const resetPasswordValidator = validate(
     forgot_password_token: forgotPasswordTokenSchema
   })
 )
+
+export const verifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { verify } = req.decoded_authorization as TokenPayload
+
+  // user not verified
+  if (verify !== UserVerifyStatus.Verified) {
+    return next(
+      new ErrorWithStatus({
+        message: USER_MESSAGES.USER_NOT_VERIFIED,
+        status: HTTP_STATUS.UNAUTHORIZED
+      })
+    )
+  }
+
+  next()
+}

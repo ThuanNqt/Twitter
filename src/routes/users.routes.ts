@@ -1,3 +1,4 @@
+import { verifiedUserValidator } from './../middlewares/users.middlewares'
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
@@ -9,6 +10,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  updateProfileController,
   verifyForgotPasswordController
 } from '~/controllers/users.controllers'
 const usersRouter = Router()
@@ -102,5 +104,15 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPassw
  */
 
 usersRouter.get('/me', accessTokenValidator, wrapAsync(getProfileController))
+
+/**
+ * Description: Update my profile
+ * Path: /me
+ * Method: Patch
+ * Header: {Authorization: Bearer <access_token>}
+ * Body: UserSchema
+ */
+
+usersRouter.patch('/me', accessTokenValidator, verifiedUserValidator, wrapAsync(updateProfileController))
 
 export default usersRouter
