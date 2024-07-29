@@ -43,6 +43,8 @@ export const USER_MESSAGES = {
   AVATAR_MUST_BE_A_STRING: 'Avatar must be a string',
   COVER_PHOTO_MUST_BE_A_STRING: 'Cover photo must be a string',
   FOLLOW_SUCCESS: 'Follow success',
-  INVALID_FOLLOWED_USER_ID: 'Invalid followed user id',
-  USER_IS_ALREADY_FOLLOWED: 'User is already followed'
+  INVALID_USER_ID: 'Invalid user id',
+  USER_IS_ALREADY_FOLLOWED: 'User is already followed',
+  UNFOLLOWED: 'Unfollowed',
+  UNFOLLOW_SUCCESS: 'Unfollow success'
 } as const

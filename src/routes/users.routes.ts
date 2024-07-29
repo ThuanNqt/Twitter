@@ -1,4 +1,9 @@
-import { followValidator, updateProfileValidator, verifiedUserValidator } from './../middlewares/users.middlewares'
+import {
+  followValidator,
+  unfollowValidator,
+  updateProfileValidator,
+  verifiedUserValidator
+} from './../middlewares/users.middlewares'
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
@@ -11,6 +16,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  unfollowController,
   updateProfileController,
   verifyForgotPasswordController
 } from '~/controllers/users.controllers'
@@ -134,5 +140,20 @@ usersRouter.patch(
  */
 
 usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, followValidator, wrapAsync(followController))
+
+/**
+ * Description: Cancel follow someone
+ * Path: /follow/:user_id
+ * Method: Delete
+ * Header: {Authorization: Bearer <access_token>}
+ */
+
+usersRouter.delete(
+  '/follow/:user_id',
+  accessTokenValidator,
+  verifiedUserValidator,
+  unfollowValidator,
+  wrapAsync(unfollowController)
+)
 
 export default usersRouter
