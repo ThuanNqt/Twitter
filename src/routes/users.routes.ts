@@ -1,4 +1,5 @@
 import {
+  changePasswordValidator,
   followValidator,
   unfollowValidator,
   updateProfileValidator,
@@ -7,6 +8,7 @@ import {
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
+  changePasswordController,
   emailVerifyController,
   followController,
   forgotPasswordController,
@@ -154,6 +156,22 @@ usersRouter.delete(
   verifiedUserValidator,
   unfollowValidator,
   wrapAsync(unfollowController)
+)
+
+/**
+ * Description: Change password
+ * Path: /change-password
+ * Method: Put
+ * Header: {Authorization: Bearer <access_token>}
+ * Body: {old_password: string, password: string, confirm_password: string}
+ */
+
+usersRouter.put(
+  '/change-password',
+  accessTokenValidator,
+  verifiedUserValidator,
+  changePasswordValidator,
+  wrapAsync(changePasswordController)
 )
 
 export default usersRouter
