@@ -1,8 +1,9 @@
-import { updateProfileValidator, verifiedUserValidator } from './../middlewares/users.middlewares'
+import { followValidator, updateProfileValidator, verifiedUserValidator } from './../middlewares/users.middlewares'
 import { wrapAsync } from './../utils/handlers'
 import { Router, Request, Response } from 'express'
 import {
   emailVerifyController,
+  followController,
   forgotPasswordController,
   getProfileController,
   loginController,
@@ -123,5 +124,15 @@ usersRouter.patch(
   filterMiddleware<UpdateProfileReqBody>(['name', 'date_of_birth', 'bio', 'location', 'avatar', 'cover_photo']),
   wrapAsync(updateProfileController)
 )
+
+/**
+ * Description: Follow someone
+ * Path: /follow
+ * Method: Post
+ * Header: {Authorization: Bearer <access_token>}
+ * Body: {followed_user_id: string}
+ */
+
+usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, followValidator, wrapAsync(followController))
 
 export default usersRouter

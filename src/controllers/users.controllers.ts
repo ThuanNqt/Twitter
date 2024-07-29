@@ -131,3 +131,12 @@ export const updateProfileController = async (req: Request, res: Response) => {
     result: user
   })
 }
+
+export const followController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { followed_user_id } = req.body
+
+  const result = await userService.follow(user_id, followed_user_id)
+
+  return res.json(result)
+}

@@ -41,5 +41,8 @@ export const USER_MESSAGES = {
   BIO_LENGTH_MUST_BE_FROM_1_TO_200: 'Bio length must be from 1 to 200 characters',
   LOCATION_MUST_BE_A_STRING: 'Location must be a string',
   AVATAR_MUST_BE_A_STRING: 'Avatar must be a string',
-  COVER_PHOTO_MUST_BE_A_STRING: 'Cover photo must be a string'
+  COVER_PHOTO_MUST_BE_A_STRING: 'Cover photo must be a string',
+  FOLLOW_SUCCESS: 'Follow success',
+  INVALID_FOLLOWED_USER_ID: 'Invalid followed user id',
+  USER_IS_ALREADY_FOLLOWED: 'User is already followed'
 } as const
