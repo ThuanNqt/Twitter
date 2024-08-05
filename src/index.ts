@@ -5,8 +5,12 @@ import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
+import { initFolder } from './utils/file'
 const app = express()
 const port = process.env.PORT || 8000
+
+// create folder upload
+initFolder()
 
 // parser json to object
 app.use(express.json())
