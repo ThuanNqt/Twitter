@@ -25,6 +25,15 @@ export const loginController = async (req: Request, res: Response, next: NextFun
   }
 }
 
+export const loginWithGoogle = async (req: Request, res: Response) => {
+  const { code } = req.query
+
+  const result = await userService.loginWithGoogle(code as string)
+  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&newUser=${result.newUser}`
+
+  res.redirect(urlRedirect)
+}
+
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.register(req.body)

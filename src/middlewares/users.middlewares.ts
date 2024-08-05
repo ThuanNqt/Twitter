@@ -168,6 +168,8 @@ const userIdSchema: ParamSchema = {
           status: HTTP_STATUS.NOT_FOUND
         })
       }
+
+      return followed_user
     }
   }
 }

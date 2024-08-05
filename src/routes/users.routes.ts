@@ -14,6 +14,7 @@ import {
   forgotPasswordController,
   getProfileController,
   loginController,
+  loginWithGoogle,
   logoutController,
   registerController,
   resendEmailVerifyController,
@@ -43,6 +44,14 @@ import { UpdateProfileReqBody } from '~/models/requests/User.requests'
  * Body: {email: string, password: string}
  */
 usersRouter.post('/login', loginValidator, wrapAsync(loginController))
+
+/**
+ * Description: Login with Google
+ * Path: /oauth/google
+ * Method: Post
+ * Body: {email: string, password: string}
+ */
+usersRouter.get('/oauth/google', wrapAsync(loginWithGoogle))
 
 /**
  * Description: Register a new user
