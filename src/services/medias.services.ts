@@ -3,6 +3,7 @@ import { Request } from 'express'
 import sharp from 'sharp'
 import { UPLOAD_DIR } from '~/constants/dir'
 import fs from 'fs'
+import { isProduction } from '~/constants/config'
 
 class MediasService {
   async handleUploadSingleImageService(req: Request) {
@@ -19,7 +20,9 @@ class MediasService {
     // delete file uploads/temp/...
     fs.unlinkSync(file.filepath)
 
-    return `http://localhost:8080/uploads/${newName}.jpg`
+    return isProduction
+      ? `${process.env.HOST}/medias/${newName}.jpg`
+      : `http://localhost:${process.env.PORT}/uploads/${newName}.jpg`
   }
 }
 
