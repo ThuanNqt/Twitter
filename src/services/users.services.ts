@@ -1,3 +1,4 @@
+import { verify } from 'crypto'
 import User from '~/models/schemas/User.schema'
 import databaseService from './database.services'
 import { RegisterReqBody, UpdateProfileReqBody } from '~/models/requests/User.requests'
@@ -230,6 +231,24 @@ class UsersService {
     })
     return {
       message: USER_MESSAGES.LOGOUT_SUCCESS
+    }
+  }
+
+  async refreshToken(old_refresh_token: string, user_id: string, verify: UserVerifyStatus) {
+    const [access_token, refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id, verify }),
+      this.signRefreshToken({ user_id, verify }),
+      databaseService.refreshTokens.deleteOne({ token: old_refresh_token })
+    ])
+
+    // add refresh_token to DB
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+    )
+
+    return {
+      access_token,
+      refresh_token
     }
   }
 

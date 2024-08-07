@@ -16,6 +16,7 @@ import {
   loginController,
   loginWithGoogle,
   logoutController,
+  refreshTokenController,
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
@@ -69,6 +70,15 @@ usersRouter.post('/register', registerValidator, wrapAsync(registerController))
  * Body: { refresh_token: string}
  */
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapAsync(logoutController))
+
+/**
+ * Description: When the access token expires, the client sends a request
+ *              with the old refresh token to renew the access token and refresh token
+ * Path: /refresh-token
+ * Method: POST
+ * Body: {refresh_token: string}
+ */
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapAsync(refreshTokenController))
 
 /**
  * Description: Verify email when user client click on the link in email
