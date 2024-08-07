@@ -21,8 +21,8 @@ class MediasService {
     fs.unlinkSync(file.filepath)
 
     return isProduction
-      ? `${process.env.HOST}/uploads/${newName}.jpg`
-      : `http://localhost:${process.env.PORT}/uploads/${newName}.jpg`
+      ? `${process.env.HOST}/static/image/${newName}.jpg`
+      : `http://localhost:${process.env.PORT}/static/image/${newName}.jpg`
   }
 }
 

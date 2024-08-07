@@ -7,6 +7,7 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { UPLOAD_DIR } from './constants/dir'
+import staticRouter from './routes/static.routes'
 const app = express()
 const port = process.env.PORT || 8000
 
@@ -22,7 +23,8 @@ databaseService.connect()
 // routes
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
-app.use('/uploads', express.static(UPLOAD_DIR))
+// app.use('/uploads', express.static(UPLOAD_DIR))
+app.use('/static', staticRouter)
 
 // Default error handler
 app.use(defaultErrorHandler)
