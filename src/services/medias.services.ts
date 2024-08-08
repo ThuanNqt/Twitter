@@ -3,6 +3,7 @@ import { Request } from 'express'
 import sharp from 'sharp'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 import fs from 'fs'
+import fsPromise from 'fs/promises'
 import { isProduction } from '~/constants/config'
 import { MediaType } from '~/constants/enums'
 import { Media } from '~/models/Other'
@@ -59,10 +60,14 @@ class MediasService {
     const result: Media[] = await Promise.all(
       files.map(async (file) => {
         await encodeHLSWithMultipleVideoStreams(file.filepath)
+        const newName = getFilenameWithoutExtension(file.newFilename)
+
+        // delete file .mp4 when upload
+        await fsPromise.unlink(file.filepath)
         return {
           url: isProduction
-            ? `${process.env.HOST}/static/video/${file.newFilename}`
-            : `http://localhost:${process.env.PORT}/static/video/${file.newFilename}`,
+            ? `${process.env.HOST}/static/video-hls/${newName}`
+            : `http://localhost:${process.env.PORT}/static/video-hls/${newName}`,
           type: MediaType.Video
         }
       })

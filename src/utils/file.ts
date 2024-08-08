@@ -55,11 +55,25 @@ export const getFilenameWithoutExtension = (fileName: string) => {
   return fileName.split('.')[0]
 }
 
+/*
+  Flow xử lý upload video giống youtube
+  - Có 2 giai đoạn:
+    + Upload video: Upload video thành công thì ta resolve về cho người dùng là thành công
+    + Encode video: Khai báo thêm 1 url endpoint để check xem cái video đã encode thành công hay chưa
+*/
+
 export const handleUploadVideo = async (req: Request) => {
   // fix es module
   const formidable = (await import('formidable')).default
+
+  // generate folder name
+  const nanoId = (await import('nanoid')).nanoid
+  const idName = nanoId()
+  const folderPath = path.resolve(UPLOAD_VIDEO_DIR, idName)
+  fs.mkdirSync(folderPath)
+
   const form = formidable({
-    uploadDir: UPLOAD_VIDEO_DIR,
+    uploadDir: folderPath,
     maxFiles: 1,
     maxFileSize: 50 * 1024 * 1024, // 50MB
     filter: function ({ name, originalFilename, mimetype }) {
@@ -67,7 +81,10 @@ export const handleUploadVideo = async (req: Request) => {
       if (!valid) {
         form.emit('error' as any, new Error('File type is not valid') as any)
       }
-      return true
+      return valid
+    },
+    filename: function () {
+      return idName
     }
   })
 
