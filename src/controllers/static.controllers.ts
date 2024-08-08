@@ -72,3 +72,28 @@ export const serveVideoStreamController = async (req: Request, res: Response) =>
   const videoStream = fs.createReadStream(videoPath, { start, end })
   videoStream.pipe(res)
 }
+
+export const serveM3u8HlsController = async (req: Request, res: Response) => {
+  const { id } = req.params
+  res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, 'master.m3u8'), (err) => {
+    if (err) {
+      if (!res.headersSent) {
+        res.status((err as any).status || 404).send('Not found')
+      }
+    }
+  })
+}
+
+export const serveSegmentHlsController = async (req: Request, res: Response) => {
+  const { id, v, segment } = req.params
+
+  // segment: 0.ts, 1.ts, 2.ts ...
+
+  res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, v, segment), (err) => {
+    if (err) {
+      if (!res.headersSent) {
+        res.status((err as any).status || 404).send('Not found')
+      }
+    }
+  })
+}

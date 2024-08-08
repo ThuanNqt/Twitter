@@ -8,8 +8,12 @@ import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRouter from './routes/static.routes'
+import cors from 'cors'
 const app = express()
 const port = process.env.PORT || 8000
+
+// cors
+app.use(cors())
 
 // create folder upload
 initFolder()
