@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { result } from 'lodash'
 import { USER_MESSAGES } from '~/constants/messages'
 import mediasService from '~/services/medias.services'
 
@@ -23,5 +24,14 @@ export const uploadVideoHlsController = async (req: Request, res: Response) => {
   return res.json({
     result: url,
     message: USER_MESSAGES.UPLOAD_SUCCESS
+  })
+}
+
+export const videoStatusController = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await mediasService.getVideoStatus(id)
+  return res.json({
+    message: USER_MESSAGES.GET_VIDEO_STATUS_SUCCESS,
+    result: result
   })
 }
