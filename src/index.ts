@@ -22,7 +22,9 @@ initFolder()
 app.use(express.json())
 
 // database
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+})
 
 // routes
 app.use('/users', usersRouter)
