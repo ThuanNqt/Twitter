@@ -1,0 +1,24 @@
+import { Router } from 'express'
+import { createTweetController } from '~/controllers/tweets.controllers'
+import { createTweetValidator } from '~/middlewares/tweets.middlewares'
+import { accessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
+import { wrapAsync } from '~/utils/handlers'
+
+const tweetsRouter = Router()
+
+/**
+ * Description: Create tweet
+ * Path: /
+ * Method: Post
+ * Body: TweetRequestBody
+ */
+
+tweetsRouter.post(
+  '/',
+  accessTokenValidator,
+  verifiedUserValidator,
+  createTweetValidator,
+  wrapAsync(createTweetController)
+)
+
+export default tweetsRouter
