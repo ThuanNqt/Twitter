@@ -11,6 +11,7 @@ import staticRouter from './routes/static.routes'
 import cors from 'cors'
 import tweetsRouter from './routes/tweets.routes'
 import bookmarkRouter from './routes/bookmarks.routes'
+import likeRouter from './routes/likes.routes'
 const app = express()
 const port = process.env.PORT || 8000
 
@@ -39,6 +40,7 @@ app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 app.use('/tweets', tweetsRouter)
 app.use('/bookmarks', bookmarkRouter)
+app.use('/likes', likeRouter)
 
 // Default error handler
 app.use(defaultErrorHandler)

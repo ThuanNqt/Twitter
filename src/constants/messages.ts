@@ -72,3 +72,8 @@ export const BOOKMARK_MESSAGE = {
   BOOKMARK_TWEET_SUCCESS: 'Bookmark tweet success',
   UN_BOOKMARK_TWEET_SUCCESS: 'UnBookmark tweet success'
 }
+
+export const LIKE_MESSAGE = {
+  LIKE_TWEET_SUCCESS: 'Like tweet success',
+  UN_LIKE_TWEET_SUCCESS: 'Unlike tweet success'
+}
