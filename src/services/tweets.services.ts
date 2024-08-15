@@ -3,7 +3,6 @@ import databaseService from './database.services'
 import Tweet from '~/models/schemas/Tweet.schema'
 import { ObjectId, WithId } from 'mongodb'
 import Hashtag from '~/models/schemas/Hashtag.schema'
-import { after } from 'lodash'
 
 class TweetService {
   async checkAndCreateHashtags(hashtags: string[]) {

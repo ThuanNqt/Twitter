@@ -67,3 +67,7 @@ export const TWEETS_MESSAGE = {
   MEDIAS_MUST_BE_AN_ARRAY_OF_MEDIA_OBJECT: 'Medias must be an array of media object',
   CREATE_TWEET_SUCCESS: 'Create tweet success'
 }
+
+export const BOOKMARK_MESSAGE = {
+  BOOKMARK_TWEET_SUCCESS: 'Bookmark tweet success'
+}
