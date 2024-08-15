@@ -1,5 +1,6 @@
 import { Collection, Db, MongoClient, ServerApiVersion } from 'mongodb'
 import Follower from '~/models/schemas/Follower.schema'
+import Hashtag from '~/models/schemas/Hashtag.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Tweet from '~/models/schemas/Tweet.schema'
 import User from '~/models/schemas/User.schema'
@@ -81,6 +82,10 @@ class DatabaseService {
 
   get tweets(): Collection<Tweet> {
     return this.db.collection(process.env.DB_TWEETS_COLLECTION as string)
+  }
+
+  get hashtags(): Collection<Hashtag> {
+    return this.db.collection(process.env.DB_HASHTAGS_COLLECTION as string)
   }
 }
 
