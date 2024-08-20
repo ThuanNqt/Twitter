@@ -40,7 +40,8 @@ export const getTweetChildrenController = async (req: Request, res: Response) =>
     tweet_id: req.params.tweet_id,
     tweet_type,
     limit,
-    page
+    page,
+    user_id: req.decoded_authorization?.user_id
   })
 
   return res.json({
