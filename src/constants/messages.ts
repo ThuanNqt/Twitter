@@ -69,7 +69,8 @@ export const TWEETS_MESSAGE = {
   INVALID_TWEET_ID: 'Invalid tweet id',
   TWEET_NOT_FOUND: 'Tweet not found',
   GET_TWEET_DETAIL_SUCCESS: 'Get tweet detail success',
-  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
+  GET_TWEET_CHILDREN_SUCCESS: 'Get tweet children success'
 }
 
 export const BOOKMARK_MESSAGE = {
