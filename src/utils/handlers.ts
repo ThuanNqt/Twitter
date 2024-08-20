@@ -1,7 +1,7 @@
-import { NextFunction, Response, Request } from 'express'
+import { NextFunction, Response, Request, RequestHandler } from 'express'
 
-export const wrapAsync = (func: any) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+export const wrapAsync = <P>(func: RequestHandler<P, any, any, any>) => {
+  return async (req: Request<P>, res: Response, next: NextFunction) => {
     try {
       await func(req, res, next)
     } catch (error) {
