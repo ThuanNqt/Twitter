@@ -15,6 +15,7 @@
   "author": "Nguyen Quang Thuan",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.20",
     "@types/minimist": "^1.2.5",
