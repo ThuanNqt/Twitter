@@ -32,6 +32,7 @@ databaseService.connect().then(() => {
   databaseService.indexRefreshToken()
   databaseService.indexVideoStatus()
   databaseService.indexFollowers()
+  databaseService.indexTweets()
 })
 
 // routes
