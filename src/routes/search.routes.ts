@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { searchController } from '~/controllers/search.controllers'
+import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapAsync } from '~/utils/handlers'
 
 const searchRouter = Router()
@@ -9,6 +10,6 @@ const searchRouter = Router()
  * Path: /
  * Method: GET
  */
-searchRouter.get('/', wrapAsync(searchController))
+searchRouter.get('/', accessTokenValidator, wrapAsync(searchController))
 
 export default searchRouter
