@@ -9,13 +9,15 @@ class SearchService {
     page,
     content,
     user_id,
-    media_type
+    media_type,
+    people_follow
   }: {
     limit: number
     page: number
     content: string
     user_id: string
-    media_type: MediaTypeQuery
+    media_type?: MediaTypeQuery
+    people_follow?: string
   }) {
     const filter: any = {
       $text: {
@@ -31,6 +33,32 @@ class SearchService {
         filter['medias.type'] = {
           $in: [MediaType.Video, MediaType.HLS]
         }
+      }
+    }
+
+    // search with people follow
+    if (people_follow && people_follow === '1') {
+      const user_id_obj = new ObjectId(user_id)
+
+      // lấy ra danh sách id mà mình follow
+      const followed_user_ids = await databaseService.followers
+        .find(
+          { user_id: user_id_obj },
+          {
+            projection: {
+              followed_user_id: 1
+            }
+          }
+        )
+        .toArray()
+
+      // chuyển danh sách đó về dạng mảng các id mà mình follow
+      const ids = followed_user_ids.map((item) => new ObjectId(item.followed_user_id))
+      // thêm id của chính mình vào vì mình có thể xem được feed của mình
+      ids.push(user_id_obj)
+
+      filter['user_id'] = {
+        $in: ids
       }
     }
 
@@ -269,7 +297,7 @@ class SearchService {
 
     return {
       tweets: tweets,
-      total: total[0].total
+      total: total[0]?.total || 0
     }
   }
 }
