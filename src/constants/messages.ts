@@ -85,5 +85,6 @@ export const LIKE_MESSAGE = {
 }
 
 export const SEARCH_MESSAGE = {
-  SEARCH_CONTENT_TWEET_SUCCESS: 'Search content tweets success'
+  SEARCH_CONTENT_TWEET_SUCCESS: 'Search content tweets success',
+  CONTENT_MUST_BE_A_STRING: 'Content must be a string'
 }
