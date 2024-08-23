@@ -12,7 +12,7 @@ import Follower from '~/models/schemas/Follower.schema'
 import axios from 'axios'
 import { ErrorWithStatus } from '~/models/Errors'
 import { HTTP_STATUS } from '~/constants/httpStatus'
-import { sendVerifyEmail } from '~/utils/sendEmail'
+import { sendForgotPasswordEmail, sendVerifyRegisterEmail } from '~/utils/sendEmail'
 
 class UsersService {
   // sign access token
@@ -139,16 +139,7 @@ class UsersService {
      * 5. Client receive access_token and refresh_token
      */
 
-    await sendVerifyEmail(
-      payload.email,
-      'Verify your email',
-      `
-        <h1>Verify your email</h1>
-        <p>
-          Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verified_token}"> here </a> to verify your email!
-        </p>
-      `
-    )
+    await sendVerifyRegisterEmail(payload.email, email_verified_token)
 
     return {
       access_token,
@@ -332,9 +323,10 @@ class UsersService {
     }
   }
 
-  async resendVerifyEmail(user_id: string) {
+  async resendVerifyEmail(user_id: string, email: string) {
     const email_verify_token = await this.signEmailVerifyToken({ user_id, verify: UserVerifyStatus.Unverified })
-    console.log('Resend verify email: ', email_verify_token)
+    // console.log('Resend verify email: ', email_verify_token)
+    await sendVerifyRegisterEmail(email, email_verify_token)
 
     // update email_verify_token in users
     await databaseService.users.updateOne(
@@ -351,7 +343,7 @@ class UsersService {
     }
   }
 
-  async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+  async forgotPassword({ user_id, verify, email }: { user_id: string; verify: UserVerifyStatus; email: string }) {
     const forgot_password_token = await this.signForgotPasswordToken({ user_id, verify })
 
     // update
@@ -366,7 +358,8 @@ class UsersService {
     )
 
     // send email to user: https://twitter.com/forgot-password?token=token
-    console.log('forgot password token: ', forgot_password_token)
+    // console.log('forgot password token: ', forgot_password_token)
+    await sendForgotPasswordEmail(email, forgot_password_token)
 
     return {
       message: USER_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
