@@ -12,6 +12,7 @@ import Follower from '~/models/schemas/Follower.schema'
 import axios from 'axios'
 import { ErrorWithStatus } from '~/models/Errors'
 import { HTTP_STATUS } from '~/constants/httpStatus'
+import { sendVerifyEmail } from '~/utils/sendEmail'
 
 class UsersService {
   // sign access token
@@ -128,7 +129,26 @@ class UsersService {
       new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token, iat, exp })
     )
 
-    console.log('Email verify token: ', email_verified_token)
+    //console.log('Email verify token: ', email_verified_token)
+    /**
+     * Flow verify email
+     * 1. Server send email to user
+     * 2. User click link in email
+     * 3. Client send request to server with email_verify_token
+     * 4. Server verify email_verify_token
+     * 5. Client receive access_token and refresh_token
+     */
+
+    await sendVerifyEmail(
+      payload.email,
+      'Verify your email',
+      `
+        <h1>Verify your email</h1>
+        <p>
+          Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verified_token}"> here </a> to verify your email!
+        </p>
+      `
+    )
 
     return {
       access_token,
