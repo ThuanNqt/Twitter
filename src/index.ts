@@ -14,6 +14,7 @@ import bookmarkRouter from './routes/bookmarks.routes'
 import likeRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
 //import '~/utils/fake'
+import '~/utils/s3'
 const app = express()
 const port = process.env.PORT || 8000
 
