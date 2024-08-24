@@ -117,7 +117,7 @@ class MediasService {
 
         // upload file to S3
         const S3Result = await uploadFileToS3({
-          fileName: newFullFileName,
+          fileName: 'images/' + newFullFileName,
           filePath: newPath,
           contentType: 'image/jpeg'
         })
@@ -155,14 +155,31 @@ class MediasService {
   async handleUploadVideoService(req: Request) {
     const files = await handleUploadVideo(req)
 
-    const result = files.map((file) => {
-      return {
-        url: isProduction
-          ? `${process.env.HOST}/static/video/${file.newFilename}`
-          : `http://localhost:${process.env.PORT}/static/video/${file.newFilename}`,
-        type: MediaType.Video
-      }
-    })
+    const result: Media[] = await Promise.all(
+      files.map(async (file) => {
+        // Upload file to S3
+        const mime = (await import('mime')).default
+        const S3Result = await uploadFileToS3({
+          fileName: 'videos/' + file.newFilename,
+          contentType: mime.getType(file.filepath) as string,
+          filePath: file.filepath
+        })
+
+        // remove file from local
+        fsPromise.unlink(file.filepath)
+
+        return {
+          url: S3Result.Location as string,
+          type: MediaType.Video
+        }
+        // return {
+        //   url: isProduction
+        //     ? `${process.env.HOST}/static/video/${file.newFilename}`
+        //     : `http://localhost:${process.env.PORT}/static/video/${file.newFilename}`,
+        //   type: MediaType.Video
+        // }
+      })
+    )
     return result
   }
 
