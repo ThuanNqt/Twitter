@@ -3,6 +3,7 @@ import path from 'path'
 import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from '~/constants/dir'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import fs from 'fs'
+import { sendFileFromS3 } from '~/utils/s3'
 
 export const serveImageController = (req: Request, res: Response) => {
   const { name } = req.params
@@ -75,25 +76,28 @@ export const serveVideoStreamController = async (req: Request, res: Response) =>
 
 export const serveM3u8HlsController = async (req: Request, res: Response) => {
   const { id } = req.params
-  res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, 'master.m3u8'), (err) => {
-    if (err) {
-      if (!res.headersSent) {
-        res.status((err as any).status || 404).send('Not found')
-      }
-    }
-  })
+  await sendFileFromS3(res, `videos-hls/${id}/master.m3u8`)
+
+  // res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, 'master.m3u8'), (err) => {
+  //   if (err) {
+  //     if (!res.headersSent) {
+  //       res.status((err as any).status || 404).send('Not found')
+  //     }
+  //   }
+  // })
 }
 
 export const serveSegmentHlsController = async (req: Request, res: Response) => {
   const { id, v, segment } = req.params
+  await sendFileFromS3(res, `videos-hls/${id}/${v}/${segment}`)
 
   // segment: 0.ts, 1.ts, 2.ts ...
 
-  res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, v, segment), (err) => {
-    if (err) {
-      if (!res.headersSent) {
-        res.status((err as any).status || 404).send('Not found')
-      }
-    }
-  })
+  // res.sendFile(path.resolve(UPLOAD_VIDEO_DIR, id, v, segment), (err) => {
+  //   if (err) {
+  //     if (!res.headersSent) {
+  //       res.status((err as any).status || 404).send('Not found')
+  //     }
+  //   }
+  // })
 }

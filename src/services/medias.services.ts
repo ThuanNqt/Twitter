@@ -1,7 +1,7 @@
-import { getFilenameWithoutExtension, handleUploadImage, handleUploadVideo } from '~/utils/file'
+import { getFilenameWithoutExtension, getFiles, handleUploadImage, handleUploadVideo } from '~/utils/file'
 import { Request } from 'express'
 import sharp from 'sharp'
-import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
+import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from '~/constants/dir'
 import fs from 'fs'
 import fsPromise from 'fs/promises'
 import { isProduction } from '~/constants/config'
@@ -11,6 +11,7 @@ import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 import databaseService from './database.services'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
 import { uploadFileToS3 } from '~/utils/s3'
+import path from 'path'
 
 class Queue {
   items: string[]
@@ -54,8 +55,31 @@ class Queue {
       try {
         await encodeHLSWithMultipleVideoStreams(videoPath)
         this.items.shift()
-        await fsPromise.unlink(videoPath)
 
+        // get all file in folder
+        const files = getFiles(path.resolve(UPLOAD_VIDEO_DIR, videoName))
+
+        // upload video-hls to S3
+        await Promise.all(
+          files.map(async (filePath) => {
+            // filePath: C:\Users\ThuanNQT\OneDrive\Twitter\uploads\videos\-prOtnkjxDMnXmDcy4-Jb\v0\fileSequence0.ts
+            // Mục đích muốn upload folder này lên s3: -prOtnkjxDMnXmDcy4-Jb
+            // Chuyển đổi file path sang dạng / thì mới lưu được folder vì window nó khác macos với linux
+            const fileName = 'videos-hls/' + filePath.replace(path.resolve(UPLOAD_VIDEO_DIR) + '\\', '')
+            const mime = (await import('mime')).default
+            return uploadFileToS3({
+              filePath,
+              fileName,
+              contentType: mime.getType(filePath) as string
+            })
+          })
+        )
+
+        // delete file in local
+        await Promise.all([
+          fsPromise.rm(videoPath, { recursive: true, force: true }),
+          fsPromise.rm(path.resolve(UPLOAD_VIDEO_DIR, videoName), { recursive: true, force: true })
+        ])
         await databaseService.videoStatus.updateOne(
           { name: videoName },
           {
@@ -68,7 +92,7 @@ class Queue {
           }
         )
 
-        console.log(`Encode video ${videoPath} success`)
+        console.log(`Encode video ${videoPath} success ##########################`)
       } catch (error) {
         await databaseService.videoStatus
           .updateOne(
@@ -193,9 +217,9 @@ class MediasService {
         queue.enqueue(file.filepath)
         return {
           url: isProduction
-            ? `${process.env.HOST}/static/video-hls/${newName}.m3u8`
-            : `http://localhost:${process.env.PORT}/static/video-hls/${newName}.m3u8`,
-          type: MediaType.Video
+            ? `${process.env.HOST}/static/video-hls/${newName}/master.m3u8`
+            : `http://localhost:${process.env.PORT}/static/video-hls/${newName}/master.m3u8`,
+          type: MediaType.HLS
         }
       })
     )

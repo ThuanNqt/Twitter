@@ -1,7 +1,9 @@
+import { HTTP_STATUS } from '~/constants/httpStatus'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
 import fs from 'fs'
 import path from 'path'
+import { Response } from 'express'
 
 // connect to S3
 const s3 = new S3({
@@ -27,7 +29,7 @@ export const uploadFileToS3 = ({
   const parallelUploads3 = new Upload({
     client: s3,
     params: {
-      Bucket: 'twitter-clone-by-nqt',
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: fileName,
       Body: fs.readFileSync(filePath),
       ContentType: contentType
@@ -61,3 +63,15 @@ export const uploadFileToS3 = ({
 // parallelUploads3.done().then((res) => {
 //   console.log(res)
 // })
+
+export const sendFileFromS3 = async (res: Response, filePath: string) => {
+  try {
+    const data = await s3.getObject({
+      Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+      Key: filePath
+    })
+    ;(data.Body as any).pipe(res)
+  } catch (error) {
+    res.status(HTTP_STATUS.NOT_FOUND).send('Not found!')
+  }
+}
