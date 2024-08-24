@@ -13,6 +13,9 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarkRouter from './routes/bookmarks.routes'
 import likeRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+
 //import '~/utils/fake'
 import '~/utils/s3'
 const app = express()
@@ -50,6 +53,20 @@ app.use('/search', searchRouter)
 // Default error handler
 app.use(defaultErrorHandler)
 
-app.listen(port, () => {
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000'
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log(`${socket.id} connected!!!`)
+  socket.on('disconnect', () => {
+    console.log(`user ${socket.id} disconnected!`)
+  })
+})
+
+httpServer.listen(port, () => {
   console.log('Server is running on port ', port)
 })
