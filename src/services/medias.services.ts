@@ -10,6 +10,7 @@ import { Media } from '~/models/Other'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 import databaseService from './database.services'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
+import { uploadFileToS3 } from '~/utils/s3'
 
 class Queue {
   items: string[]
@@ -112,18 +113,40 @@ class MediasService {
         // convert file image => jpeg
         await sharp(file.filepath).jpeg({ quality: 20 }).toFile(newPath)
 
+        const newFullFileName = `${newName}.jpg`
+
+        // upload file to S3
+        const S3Result = await uploadFileToS3({
+          fileName: newFullFileName,
+          filePath: newPath,
+          contentType: 'image/jpeg'
+        })
+
         // remove cache sharp
         await sharp.cache(false)
 
         // delete file uploads/temp/...
-        fs.unlinkSync(file.filepath)
+        //await Promise.all([fsPromise.unlink(file.filepath), fsPromise.unlink(newPath)])
+        const deleteFileTasks = []
+        if (fs.existsSync(file.filepath)) {
+          deleteFileTasks.push(fsPromise.unlink(file.filepath))
+        }
+        if (fs.existsSync(newPath)) {
+          deleteFileTasks.push(fsPromise.unlink(newPath))
+        }
+        await Promise.all(deleteFileTasks)
 
         return {
-          url: isProduction
-            ? `${process.env.HOST}/static/image/${newName}.jpg`
-            : `http://localhost:${process.env.PORT}/static/image/${newName}.jpg`,
+          url: S3Result.Location as string,
           type: MediaType.Image
         }
+
+        // return {
+        //   url: isProduction
+        //     ? `${process.env.HOST}/static/image/${newName}.jpg`
+        //     : `http://localhost:${process.env.PORT}/static/image/${newName}.jpg`,
+        //   type: MediaType.Image
+        // }
       })
     )
     return result
