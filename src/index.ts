@@ -19,6 +19,8 @@ import { Server } from 'socket.io'
 //import '~/utils/fake'
 import '~/utils/s3'
 import Conversation from './models/schemas/Conversations.schema'
+import conversationsRouter from './routes/conversations.routes'
+import { ObjectId } from 'mongodb'
 const app = express()
 const port = process.env.PORT || 8000
 
@@ -50,6 +52,7 @@ app.use('/tweets', tweetsRouter)
 app.use('/bookmarks', bookmarkRouter)
 app.use('/likes', likeRouter)
 app.use('/search', searchRouter)
+app.use('/conversations', conversationsRouter)
 
 // Default error handler
 app.use(defaultErrorHandler)
@@ -83,8 +86,8 @@ io.on('connection', (socket) => {
 
     await databaseService.conversations.insertOne(
       new Conversation({
-        sender_id: data.from,
-        receiver_id: data.to,
+        sender_id: new ObjectId(data.from),
+        receiver_id: new ObjectId(data.to),
         content: data.content
       })
     )

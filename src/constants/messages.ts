@@ -89,3 +89,7 @@ export const SEARCH_MESSAGE = {
   SEARCH_CONTENT_TWEET_SUCCESS: 'Search content tweets success',
   CONTENT_MUST_BE_A_STRING: 'Content must be a string'
 }
+
+export const CONVERSATION_MESSAGE = {
+  GET_CONVERSATION_SUCCESSFULLY: 'Get conversation successfully'
+}
