@@ -37,6 +37,7 @@ export const USER_MESSAGES = {
   FORGOT_PASSWORD_TOKEN_INVALID: 'Forgot password token invalid',
   RESET_PASSWORD_SUCCESS: 'Reset password success',
   GET_MY_PROFILE_SUCCESS: 'Get my profile success',
+  GET_PROFILE_SUCCESS: 'Get profile success',
   UPDATE_PROFILE_SUCCESS: 'Update profile success',
   BIO_MUST_BE_A_STRING: 'Bio must be a string',
   BIO_LENGTH_MUST_BE_FROM_1_TO_200: 'Bio length must be from 1 to 200 characters',

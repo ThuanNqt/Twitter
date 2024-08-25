@@ -13,6 +13,7 @@ import {
   followController,
   forgotPasswordController,
   getProfileController,
+  getProfileOtherController,
   loginController,
   loginWithGoogle,
   logoutController,
@@ -134,6 +135,15 @@ usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPassw
  */
 
 usersRouter.get('/me', accessTokenValidator, wrapAsync(getProfileController))
+
+/**
+ * Description: Get profile user
+ * Path: /:username
+ * Method: Get
+ * Header: {Authorization: Bearer <access_token>}
+ */
+
+usersRouter.get('/:username', wrapAsync(getProfileOtherController))
 
 /**
  * Description: Update my profile

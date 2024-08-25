@@ -398,6 +398,20 @@ class UsersService {
     return user
   }
 
+  async getProfileOther(username: string) {
+    const user = await databaseService.users.findOne(
+      { username: username },
+      {
+        projection: {
+          password: 0,
+          email_verified_token: 0,
+          forgot_password_token: 0
+        }
+      }
+    )
+    return user
+  }
+
   async updateProfile(user_id: string, payload: UpdateProfileReqBody) {
     // convert date_of_birth to Date
     const _payload = payload.date_of_birth ? { ...payload, date_of_birth: new Date(payload.date_of_birth) } : payload

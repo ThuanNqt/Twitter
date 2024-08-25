@@ -142,6 +142,15 @@ export const getProfileController = async (req: Request, res: Response) => {
   })
 }
 
+export const getProfileOtherController = async (req: Request, res: Response) => {
+  const { username } = req.params
+  const result = await userService.getProfileOther(username)
+  return res.json({
+    message: USER_MESSAGES.GET_PROFILE_SUCCESS,
+    result
+  })
+}
+
 export const updateProfileController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const user = await userService.updateProfile(user_id, req.body)
