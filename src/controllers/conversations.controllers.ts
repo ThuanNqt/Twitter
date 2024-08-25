@@ -18,7 +18,7 @@ export const getConversationsController = async (req: Request, res: Response) =>
   return res.json({
     message: CONVERSATION_MESSAGE.GET_CONVERSATION_SUCCESSFULLY,
     result: {
-      conservations: result.conversations,
+      conversations: result.conversations,
       limit,
       page,
       total_page: Math.ceil(result.total / limit)
