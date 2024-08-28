@@ -13,6 +13,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
 import { TokenPayload } from '~/models/requests/User.requests'
 import { UserVerifyStatus } from '~/constants/enums'
+import { verifyAccessTokenValidator } from '~/utils/commons'
 
 // global schema
 const passwordSchema: ParamSchema = {
@@ -266,26 +267,7 @@ export const accessTokenValidator = validate(
             // Header: Bearer access_token => access_token
             const access_token = (value || '').split(' ')[1]
 
-            if (access_token === '') {
-              throw new ErrorWithStatus({
-                message: USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
-                status: HTTP_STATUS.UNAUTHORIZED
-              })
-            }
-
-            try {
-              const decoded_authorization = await verifyToken({
-                token: access_token,
-                secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
-              })
-              req.decoded_authorization = decoded_authorization
-            } catch (error) {
-              throw new ErrorWithStatus({
-                message: (error as JsonWebTokenError).message,
-                status: HTTP_STATUS.UNAUTHORIZED
-              })
-            }
-            return true
+            return await verifyAccessTokenValidator(access_token, req as Request)
           }
         }
       }
