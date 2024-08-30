@@ -4,13 +4,14 @@ import { S3 } from '@aws-sdk/client-s3'
 import fs from 'fs'
 import path from 'path'
 import { Response } from 'express'
+import { envConfig } from '~/constants/config'
 
 // connect to S3
 const s3 = new S3({
-  region: process.env.AWS_REGION,
+  region: envConfig.awsRegion,
   credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+    secretAccessKey: envConfig.awsSecretAccessKey,
+    accessKeyId: envConfig.awsAccessKeyId
   }
 })
 
@@ -29,7 +30,7 @@ export const uploadFileToS3 = ({
   const parallelUploads3 = new Upload({
     client: s3,
     params: {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Bucket: envConfig.awsS3BucketName,
       Key: fileName,
       Body: fs.readFileSync(filePath),
       ContentType: contentType
@@ -67,7 +68,7 @@ export const uploadFileToS3 = ({
 export const sendFileFromS3 = async (res: Response, filePath: string) => {
   try {
     const data = await s3.getObject({
-      Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+      Bucket: envConfig.awsS3BucketName,
       Key: filePath
     })
     ;(data.Body as any).pipe(res)

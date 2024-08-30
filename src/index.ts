@@ -1,5 +1,3 @@
-import dotenv from 'dotenv'
-dotenv.config()
 import express, { Request, Response, NextFunction } from 'express'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
@@ -20,9 +18,10 @@ import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
 import helmet from 'helmet'
 import { rateLimit } from 'express-rate-limit'
+import { envConfig } from './constants/config'
 
 const app = express()
-const port = process.env.PORT || 8000
+const port = envConfig.port
 const httpServer = createServer(app)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

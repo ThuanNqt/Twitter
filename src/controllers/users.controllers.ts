@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 import { ObjectId } from 'mongodb'
+import { envConfig } from '~/constants/config'
 import { UserVerifyStatus } from '~/constants/enums'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
@@ -29,7 +30,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
   const { code } = req.query
 
   const result = await userService.loginWithGoogle(code as string)
-  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&newUser=${result.newUser}`
+  const urlRedirect = `${envConfig.clientRedirectCallback}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&newUser=${result.newUser}`
 
   res.redirect(urlRedirect)
 }

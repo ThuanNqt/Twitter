@@ -2,14 +2,15 @@ import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
 import { config } from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import { envConfig } from '~/constants/config'
 
 config()
 // Create SES service object.
 const sesClient = new SESClient({
-  region: process.env.AWS_REGION as string,
+  region: envConfig.awsRegion,
   credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+    secretAccessKey: envConfig.awsSecretAccessKey,
+    accessKeyId: envConfig.awsAccessKeyId
   }
 })
 
@@ -55,7 +56,7 @@ export const createSendEmailCommand = ({
 
 const sendVerifyEmail = async (toAddress: string, subject: string, body: string) => {
   const sendEmailCommand = createSendEmailCommand({
-    fromAddress: process.env.SES_FROM_ADDRESS as string,
+    fromAddress: envConfig.sesFromAddress,
     toAddresses: toAddress,
     body,
     subject
@@ -74,7 +75,7 @@ export const sendVerifyRegisterEmail = (
 ) => {
   const customizedTemplate = template
     .replace('{{content}}', 'xác thực email')
-    .replace('{{link}}', `${process.env.CLIENT_URL}/verify-email?token=${email_verified_token}`)
+    .replace('{{link}}', `${envConfig.clientUrl}/verify-email?token=${email_verified_token}`)
     .replace('{{titleLink}}', 'Xác thực email')
 
   return sendVerifyEmail(toAddress, 'Verify your email', customizedTemplate)
@@ -87,7 +88,7 @@ export const sendForgotPasswordEmail = (
 ) => {
   const customizedTemplate = template
     .replace('{{content}}', 'đổi mật khẩu')
-    .replace('{{link}}', `${process.env.CLIENT_URL}/forgot-password?token=${forgot_password_token}`)
+    .replace('{{link}}', `${envConfig.clientUrl}/forgot-password?token=${forgot_password_token}`)
     .replace('{{titleLink}}', 'Đổi mật khẩu')
 
   return sendVerifyEmail(toAddress, 'Forgot Password', customizedTemplate)

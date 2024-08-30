@@ -4,6 +4,7 @@ import { ErrorWithStatus } from '~/models/Errors'
 import { verifyToken } from './jwt'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { Request } from 'express'
+import { envConfig } from '~/constants/config'
 
 export const numberEnumToArray = (numberEnum: { [key: string]: string | number }) => {
   return Object.values(numberEnum).filter((value) => {
@@ -22,7 +23,7 @@ export const verifyAccessTokenValidator = async (access_token: string, req?: Req
   try {
     const decoded_authorization = await verifyToken({
       token: access_token,
-      secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
+      secretOrPublicKey: envConfig.jwtSecretAccessToken
     })
 
     if (req) {

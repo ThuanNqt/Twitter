@@ -13,6 +13,7 @@ import axios from 'axios'
 import { ErrorWithStatus } from '~/models/Errors'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { sendForgotPasswordEmail, sendVerifyRegisterEmail } from '~/utils/sendEmail'
+import { envConfig } from '~/constants/config'
 
 class UsersService {
   // sign access token
@@ -23,9 +24,9 @@ class UsersService {
         verify,
         token_type: TokenType.AccessToken
       },
-      privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
+      privateKey: envConfig.jwtSecretAccessToken,
       options: {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.accessTokenExpiresIn
       }
     })
   }
@@ -40,7 +41,7 @@ class UsersService {
           token_type: TokenType.RefreshToken,
           exp
         },
-        privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+        privateKey: envConfig.jwtSecretRefreshToken
       })
     }
 
@@ -50,9 +51,9 @@ class UsersService {
         verify,
         token_type: TokenType.RefreshToken
       },
-      privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
+      privateKey: envConfig.jwtSecretRefreshToken,
       options: {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.refreshTokenExpiresIn
       }
     })
   }
@@ -65,9 +66,9 @@ class UsersService {
         verify,
         token_type: TokenType.EmailVerifyToken
       },
-      privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
+      privateKey: envConfig.jwtSecretEmailVerifyToken,
       options: {
-        expiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.emailVerifyTokenExpiresIn
       }
     })
   }
@@ -80,9 +81,9 @@ class UsersService {
         verify,
         token_type: TokenType.ForgotPasswordToken
       },
-      privateKey: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
+      privateKey: envConfig.jwtSecretForgotPasswordToken,
       options: {
-        expiresIn: process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN
+        expiresIn: envConfig.forgotPasswordTokenExpiresIn
       }
     })
   }
@@ -97,7 +98,7 @@ class UsersService {
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({
       token: refresh_token,
-      secretOrPublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+      secretOrPublicKey: envConfig.jwtSecretRefreshToken
     })
   }
 
@@ -170,9 +171,9 @@ class UsersService {
   private async getOAuthGoogleToken(code: string) {
     const body = {
       code,
-      client_id: process.env.GOOGLE_CIENT_ID,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+      client_id: envConfig.googleClientId,
+      client_secret: envConfig.googleClientSecret,
+      redirect_uri: envConfig.googleRedirectUri,
       grant_type: 'authorization_code'
     }
 
