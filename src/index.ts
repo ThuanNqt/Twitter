@@ -6,7 +6,7 @@ import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRouter from './routes/static.routes'
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 import tweetsRouter from './routes/tweets.routes'
 import bookmarkRouter from './routes/bookmarks.routes'
 import likeRouter from './routes/likes.routes'
@@ -18,7 +18,7 @@ import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
 import helmet from 'helmet'
 import { rateLimit } from 'express-rate-limit'
-import { envConfig } from './constants/config'
+import { envConfig, isProduction } from './constants/config'
 
 const app = express()
 const port = envConfig.port
@@ -38,7 +38,10 @@ app.use(helmet())
 app.use(limiter)
 
 // cors
-app.use(cors())
+const corsOptions: CorsOptions = {
+  origin: isProduction ? envConfig.clientUrl : '*'
+}
+app.use(cors(corsOptions))
 
 // create folder upload
 initFolder()
