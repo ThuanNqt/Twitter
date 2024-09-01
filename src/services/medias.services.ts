@@ -140,37 +140,38 @@ class MediasService {
         const newFullFileName = `${newName}.jpg`
 
         // upload file to S3
-        const S3Result = await uploadFileToS3({
-          fileName: 'images/' + newFullFileName,
-          filePath: newPath,
-          contentType: 'image/jpeg'
-        })
+        // const S3Result = await uploadFileToS3({
+        //   fileName: 'images/' + newFullFileName,
+        //   filePath: newPath,
+        //   contentType: 'image/jpeg'
+        // })
 
         // remove cache sharp
         await sharp.cache(false)
 
         // delete file uploads/temp/...
         //await Promise.all([fsPromise.unlink(file.filepath), fsPromise.unlink(newPath)])
-        const deleteFileTasks = []
-        if (fs.existsSync(file.filepath)) {
-          deleteFileTasks.push(fsPromise.unlink(file.filepath))
-        }
-        if (fs.existsSync(newPath)) {
-          deleteFileTasks.push(fsPromise.unlink(newPath))
-        }
-        await Promise.all(deleteFileTasks)
 
-        return {
-          url: S3Result.Location as string,
-          type: MediaType.Image
-        }
+        // const deleteFileTasks = []
+        // if (fs.existsSync(file.filepath)) {
+        //   deleteFileTasks.push(fsPromise.unlink(file.filepath))
+        // }
+        // if (fs.existsSync(newPath)) {
+        //   deleteFileTasks.push(fsPromise.unlink(newPath))
+        // }
+        // await Promise.all(deleteFileTasks)
 
         // return {
-        //   url: isProduction
-        //     ? `${process.env.HOST}/static/image/${newName}.jpg`
-        //     : `http://localhost:${process.env.PORT}/static/image/${newName}.jpg`,
+        //   url: S3Result.Location as string,
         //   type: MediaType.Image
         // }
+
+        return {
+          url: isProduction
+            ? `${envConfig.host}/static/image/${newName}.jpg`
+            : `http://localhost:${envConfig.port}/static/image/${newName}.jpg`,
+          type: MediaType.Image
+        }
       })
     )
     return result
