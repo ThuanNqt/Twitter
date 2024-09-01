@@ -1,0 +1,8 @@
+version: '3'
+services:
+  twitter:
+    image: dev/twitter:v1
+    ports:
+      - '8080:8080'
+    volumes:
+      - 'C:\Users\ThuanNQT\OneDrive\Twitter\uploads:/app/uploads'
