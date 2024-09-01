@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: Twitter Clone
+  description: Project Twitter Clone by Nguyen Quang Thuan
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: users
+    description: APIs user
+paths:
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login
+      description: Log in to the system
+      operationId: login
+      requestBody:
+        description: Information login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+
+        required: true
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationSuccess'
+        '422':
+          description: Validation exception
+  /users/me:
+    get:
+      tags:
+        - Me
+      summary: Get information me
+      description: Get information me
+      operationId: getMe
+      security:
+        - BearerAuth: []
+
+      responses:
+        default:
+          description: Get my profile success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get my profile success
+                  result:
+                    $ref: '#/components/schemas/User'
+
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: thuan13112003@gmail.com
+        password:
+          type: string
+          example: Thuan@123
+    AuthenticationSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Login success
+        result:
+          type: object
+          properties:
+            access_token:
+              type: string
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY3MzM2ZjRlNzY1M2M2NzljNWIzNTcwIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3MjUxNDY3NjMsImV4cCI6MTcyNTIzMzE2M30.LtKCVgv1LiCIb0rh8sFaAtJg8oZRheMetCuwRs3BRDQ'
+            refresh_token:
+              type: string
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY3MzM2ZjRlNzY1M2M2NzljNWIzNTcwIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjoxLCJpYXQiOjE3MjUxNDY3NjMsImV4cCI6MTczMzc4Njc2M30.W0ul6oHFKOKrhL-vaXri_iIRlPYc711r1CjlGMIqe60'
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '667336f4e7653c679c5b3570'
+        name:
+          type: string
+          example: 'Nguyen Quang Thuan'
+        email:
+          type: string
+          format: email
+          example: 'thuan13112003@gmail.com'
+        date_of_birth:
+          type: string
+          format: date-time
+          example: '2024-06-19T14:07:43.000Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-06-19T19:52:20.547Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2024-07-29T11:15:16.780Z'
+        verify:
+          $ref: '#/components/schemas/UserVerifyStatus'
+        bio:
+          type: string
+          example: 'Hhihihihi'
+        location:
+          type: string
+          example: ''
+        username:
+          type: string
+          example: 'thuan13112003'
+        avatar:
+          type: string
+          example: 'http://localhost:8080/images/avatars/vidu.jpg'
+        cover_photo:
+          type: string
+          example: 'http://localhost:8080/images/avatars/vidu.jpg'
+        twitter_circle:
+          type: array
+          items:
+            type: string
+            format: MongoId
+          example: ['66bf7d200b52c62b4f6ae423', '66bf7d200b52c62b4f6ae456']
+    UserVerifyStatus:
+      type: number
+      enum: [Unverified, Verified, Banned]
+      example: 1
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

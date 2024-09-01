@@ -19,6 +19,20 @@ import initSocket from './utils/socket'
 import helmet from 'helmet'
 import { rateLimit } from 'express-rate-limit'
 import { envConfig, isProduction } from './constants/config'
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsdoc from 'swagger-jsdoc'
+
+const options: swaggerJsdoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Twitter Clone (API)',
+      version: '1.0.0'
+    }
+  },
+  apis: ['./openapi/*.yaml'] // files containing annotations as above
+}
+const openapiSpecification = swaggerJsdoc(options)
 
 const app = express()
 const port = envConfig.port
@@ -48,6 +62,9 @@ initFolder()
 
 // parser json to object
 app.use(express.json())
+
+// swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 
 // database
 databaseService.connect().then(() => {

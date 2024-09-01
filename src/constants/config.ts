@@ -4,7 +4,7 @@ const options = argv(process.argv.slice(2))
 export const isProduction = options.env === 'production'
 
 config({
-  path: options.env ? `.env.${options.env}` : '.env'
+  path: options.env ? `.env` : '.env'
 })
 
 export const envConfig = {
