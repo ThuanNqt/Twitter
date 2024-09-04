@@ -40,4 +40,4 @@ jobs:
             docker pull thuannqt/twitter:v5
             docker stop twitter-clone
             docker rm twitter-clone
-            docker run -dp 8002:8002 --name twitter-clone -v /uploads:/app/uploads thuannqt/twitter:v5
+            docker run -dp 8002:8002 --name twitter-clone --restart unless-stopped -v /uploads:/app/uploads thuannqt/twitter:v5
